@@ -1,0 +1,45 @@
+services:
+    test-app:
+        image: test-app
+        hostname: test-app
+        networks:
+            - test-net
+        expose:
+            - "3001"
+        ports:
+            - "3001:3001"
+        volumes:
+            - ./test-app:/usr/src/app
+        working_dir: /usr/src/app
+        command: node index.js
+    test-client:
+        image: test-client
+        hostname: test-client
+        networks:
+            - test-net
+        expose:
+            - "3000"
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./test-client:/usr/src/app
+        working_dir: /usr/src/app
+        command: npm start
+    test-mysql:
+        image: test-mysql
+        hostname: test-mysql
+        networks:
+            - test-net
+        restart: always
+        volumes:
+            - test-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: octoberfest
+volumes:
+    test-data:
+        external: true
+        name: test-data
+networks:
+    test-net:
+        external: true
+        name: test-net
